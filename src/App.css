@@ -1,0 +1,17 @@
+input[type="text"]:active {
+  border: none;
+  outline: none;
+}
+
+input[type="text"]:focus {
+  outline: none;
+}
+
+input:focus {
+  border: none;
+}
+
+.active {
+  background: rgb(213, 11, 11);
+  color: white;
+}
