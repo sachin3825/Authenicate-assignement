@@ -5,7 +5,8 @@ import Card from "./Card";
 import { CiSearch } from "react-icons/ci";
 import LoginModal from "./LoginModal";
 import AddListModal from "./AddListModal";
-import { addMovieToList, createList } from "../redux/slices/user"; // Adjust path as necessary
+import { addMovieToList } from "../redux/slices/user";
+import { BsBookmarkStarFill } from "react-icons/bs";
 import { toast } from "react-toastify";
 const Home = () => {
   const [fetchMovieApi, { isLoading }] = useFetchMovieMutation();
@@ -15,6 +16,7 @@ const Home = () => {
   const [selectedList, setSelectedList] = useState("");
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isAddListModalOpen, setAddListModalOpen] = useState(false);
+
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
   const userLists = useSelector((state) => state.user.lists);
   const dispatch = useDispatch();
@@ -53,17 +55,28 @@ const Home = () => {
     }
   };
 
-  const handleCreateList = (listName) => {
-    dispatch(createList(listName));
-    setSelectedList(listName);
-  };
-
   return (
     <section className='w-full h-full p-5'>
       <div className='p-5 border-red-400 border-2 rounded-md'>
         <h1 className='text-4xl'>
           Welcome to <span className='text-red-500'>Watchlists</span>
         </h1>
+
+        <p className='mt-2 font-bold'>steps to use</p>
+        <ol className='list-decimal list-inside space-y-2 text-sm text-gray-700'>
+          <li>First, log in from the sidebar.</li>
+          <li>Create a new list where you wish to add movies.</li>
+          <li>Search for a movie by its title in the search bar.</li>
+          <li>
+            Select the list where you want to add the movie from the dropdown
+            menu.
+          </li>
+          <li className='flex items-center'>
+            Click on the{" "}
+            <BsBookmarkStarFill className='inline-block text-current align-text-bottom ml-1' />
+            icon to add the movie to your selected list.
+          </li>
+        </ol>
       </div>
 
       <div className='mt-5 flex flex-col gap-4'>
@@ -96,26 +109,28 @@ const Home = () => {
         {errorMessage && <div>Error occurred: {errorMessage}</div>}
         {movieDetails && (
           <div className='flex flex-col'>
-            <div className='self-end'>
-              <select
-                value={selectedList}
-                onChange={(e) => setSelectedList(e.target.value)}
-                className='p-2 border-2 mb-3 border-gray-300 rounded-md max-w-52'
-              >
-                <option value=''>Select a list</option>
-                {userLists.map((list) => (
-                  <option key={list.listName} value={list.listName}>
-                    {list.listName}
-                  </option>
-                ))}
-              </select>
-              <button
-                onClick={() => setAddListModalOpen(true)}
-                className='ml-2 p-2 bg-blue-500 text-white rounded-md'
-              >
-                Create New List
-              </button>
-            </div>
+            {isLoggedIn && (
+              <div className='self-end'>
+                <select
+                  value={selectedList}
+                  onChange={(e) => setSelectedList(e.target.value)}
+                  className='p-2 border-2 mb-3 border-gray-300 rounded-md max-w-52'
+                >
+                  <option value=''>Select a list</option>
+                  {userLists.map((list) => (
+                    <option key={list.listName} value={list.listName}>
+                      {list.listName}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  onClick={() => setAddListModalOpen(true)}
+                  className='ml-2 p-2 bg-blue-500 text-white rounded-md'
+                >
+                  Create New List
+                </button>
+              </div>
+            )}
 
             <Card
               movie={movieDetails}
@@ -133,7 +148,6 @@ const Home = () => {
       <AddListModal
         isOpen={isAddListModalOpen}
         onClose={() => setAddListModalOpen(false)}
-        handleCreateList={handleCreateList}
       />
     </section>
   );

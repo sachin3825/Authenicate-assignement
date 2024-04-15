@@ -10,6 +10,9 @@ const Modal = ({ open, onClose, children, title }) => {
       open={open}
       onClose={onClose}
       aria-labelledby='customized-dialog-title'
+      PaperProps={{
+        style: { maxWidth: "400px", width: "100%" },
+      }}
     >
       <DialogContent dividers>
         <IconButton
@@ -24,8 +27,14 @@ const Modal = ({ open, onClose, children, title }) => {
         >
           <CloseIcon />
         </IconButton>
-        {title && <h2 id='customized-dialog-title'>{title}</h2>}
-        {children}
+        <div className='flex flex-col items-center'>
+          {title && (
+            <h2 id='customized-dialog-title' className='font-bold text-2xl'>
+              {title}
+            </h2>
+          )}
+          {children}
+        </div>
       </DialogContent>
     </Dialog>
   );

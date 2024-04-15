@@ -19,18 +19,36 @@ const userSlice = createSlice({
       state.isLoggedIn = false;
     },
     createList: (state, action) => {
-      state.lists.push({
-        listName: action.payload,
-        movies: [],
-      });
+      const existingListIndex = state.lists.findIndex(
+        (list) => list.listName.toLowerCase() === action.payload.toLowerCase()
+      );
+
+      if (existingListIndex === -1) {
+        state.lists.push({
+          listName: action.payload,
+          movies: [],
+        });
+        toast.success("List created!");
+      } else {
+        toast.error("A list with that name already exists!");
+      }
     },
     updateListName: (state, action) => {
       const { oldListName, newListName } = action.payload;
-      const listIndex = state.lists.findIndex(
-        (list) => list.listName === oldListName
+      const existingListIndex = state.lists.findIndex(
+        (list) => list.listName.toLowerCase() === newListName.toLowerCase()
       );
-      if (listIndex !== -1) {
-        state.lists[listIndex].listName = newListName;
+
+      if (existingListIndex === -1) {
+        const listIndex = state.lists.findIndex(
+          (list) => list.listName === oldListName
+        );
+        if (listIndex !== -1) {
+          state.lists[listIndex].listName = newListName;
+          toast.success("List name updated!");
+        }
+      } else {
+        toast.error("A list with that name already exists!");
       }
     },
     removeList: (state, action) => {
