@@ -5,7 +5,7 @@ import Sidebar from "./components/Sidebar";
 import ListDetails from "./components/ListDetails";
 import "./App.css";
 import { RxHamburgerMenu } from "react-icons/rx";
-
+import Error from "./page/Error";
 function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -27,6 +27,7 @@ function App() {
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/lists/:listName' element={<ListDetails />} />
+          <Route path='*' element={<Error />} />
         </Routes>
       </div>
     </BrowserRouter>
